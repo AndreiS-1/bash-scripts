@@ -34,6 +34,12 @@ check_processes() {
     done
 }
 
+check_load() {
+    # Extrage valoarea "load average" pe ultimul minut
+    local load=$(uptime | awk -F'load average:' '{ print $2 }' | cut -d, -f1 | tr -d ' ')
+    log "INFO" "CPU Load average (1 min): $load"
+}
+
 check_services() {
     SERVICES=("sshd" "cronie" "NetworkManager")
 
@@ -49,6 +55,7 @@ check_services() {
 log "INFO" "Monitor started"
 check_disk
 check_memory
+check_load
 check_processes
 check_services
 log "INFO" "Monitor stopped"
